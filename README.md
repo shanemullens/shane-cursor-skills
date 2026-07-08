@@ -1,2 +1,100 @@
 # shane-cursor-skills
-Splunk-focused skills
+
+Splunk-focused Cursor skills and agents for threat hunting, TA development, dashboard building, and log generation. Works with [Cursor](https://cursor.com) and other AI coding agents that support the [Agent Skills](https://agentskills.io/) specification.
+
+This repository extends [dtherrick/splunk-skills](https://github.com/dtherrick/splunk-skills) with the same `skills/` + `agents/` layout. It adds **splunk-log-generator** and **comprehensive-plan-mode**, and uses the [Vercel skills CLI](https://github.com/vercel-labs/skills) for installation instead of a custom npm package.
+
+## Installation
+
+### Skills (via Vercel skills CLI)
+
+Install all skills globally (available across all projects):
+
+```bash
+npx skills add shanemullens/shane-cursor-skills -g -y
+```
+
+Install to the current project only:
+
+```bash
+npx skills add shanemullens/shane-cursor-skills -y
+```
+
+List available skills without installing:
+
+```bash
+npx skills add shanemullens/shane-cursor-skills --list
+```
+
+Install a specific skill:
+
+```bash
+npx skills add shanemullens/shane-cursor-skills --skill peak-threat-hunting -g -y
+```
+
+Skills are installed to `~/.cursor/skills/` (global) or `.cursor/skills/` (project).
+
+### Agents (manual install)
+
+The skills CLI installs skills only. To install agents, copy them to your Cursor agents directory:
+
+```powershell
+Copy-Item agents\*.md $env:USERPROFILE\.cursor\agents\ -Force
+```
+
+Agents are installed to `~/.cursor/agents/`.
+
+## What's Included
+
+### Skills
+
+Skills are instruction sets that guide your AI coding agent through specialized workflows.
+
+| Skill | Description |
+|-------|-------------|
+| **peak-threat-hunting** | Conduct threat hunts in Splunk using the PEAK framework (Prepare, Execute, Act with Knowledge). Supports hypothesis-driven, baseline, and model-assisted hunts with MITRE ATT&CK mapping. |
+| **splunk-ta-development** | Build Splunk Technology Add-ons (TAs) end-to-end — analyze log samples, create props.conf/transforms.conf, load data, and validate field extractions via the Splunk MCP server. |
+| **splunk-dashboard-studio** | Build Dashboard Studio dashboards using JSON definitions. Covers visualization types, layout design, tokens, interactivity, Dynamic Options Syntax (DOS), and conditional formatting. |
+| **splunk-log-generator** | Build Python scripts that generate realistic logs for any Splunk sourcetype and send them to Splunk via HEC. Supports catalog mode and scenario mode with correlated IOCs. |
+| **comprehensive-plan-mode** | Enhances Cursor Plan Mode with a three-phase workflow — clarification, research, and detailed plan generation. Attach at the end of Plan Mode prompts; not auto-invoked (`disable-model-invocation: true`). |
+
+### Agents
+
+Agents are subagent definitions that handle specialized tasks autonomously.
+
+| Agent | Description |
+|-------|-------------|
+| **dashboard-studio-builder** | Builds Dashboard Studio dashboards as JSON definitions. Full lifecycle: discovers data via Splunk MCP, assembles the definition, deploys, and validates. |
+
+## Publishing (Maintainer)
+
+Local `~/.cursor/skills/` and `~/.cursor/agents/` are the source of truth. To publish changes to this repository:
+
+```powershell
+.\scripts\publish-skills.ps1
+git push origin main
+```
+
+Preview changes without modifying files or git state:
+
+```powershell
+.\scripts\publish-skills.ps1 -DryRun
+```
+
+Override the commit message:
+
+```powershell
+.\scripts\publish-skills.ps1 -CommitMessage "chore: update peak-threat-hunting templates"
+```
+
+## Prerequisites
+
+Most Splunk skills and agents require a [Splunk MCP server](https://github.com/livehybrid/splunk-mcp) connection to run queries and deploy dashboards against a Splunk instance.
+
+**splunk-log-generator** requires Python and a Splunk HTTP Event Collector (HEC) endpoint.
+
+**comprehensive-plan-mode** is attach-only — add `@comprehensive-plan-mode` to Plan Mode prompts when you want maximum plan depth before implementation.
+
+## License
+
+MIT
