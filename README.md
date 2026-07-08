@@ -36,9 +36,19 @@ Skills are installed to `~/.cursor/skills/` (global) or `.cursor/skills/` (proje
 
 ### Agents (manual install)
 
-The skills CLI installs skills only. To install agents, copy them to your Cursor agents directory:
+The skills CLI installs skills only. To install agents, copy them to your Cursor agents directory.
+
+**macOS / Linux:**
+
+```bash
+mkdir -p ~/.cursor/agents
+cp agents/*.md ~/.cursor/agents/
+```
+
+**Windows (PowerShell):**
 
 ```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\agents" | Out-Null
 Copy-Item agents\*.md $env:USERPROFILE\.cursor\agents\ -Force
 ```
 
