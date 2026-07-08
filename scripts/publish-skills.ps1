@@ -63,17 +63,16 @@ function Get-UnrelatedDirtyPaths([string]$Path) {
     Push-Location $Path
     try {
         $status = git status --porcelain
+        if ($LASTEXITCODE -ne 0) {
+            throw 'git status failed'
+        }
         if (-not $status) {
             return @()
         }
 
-        return $status | ForEach-Object {
-            $line = $_.Substring(3)
-            if ($line -match '^skills/' -or $line -match '^agents/') {
-                return
-            }
-            $line
-        } | Where-Object { $_ }
+        return @($status | ForEach-Object { $_.Substring(3) } | Where-Object {
+            $_ -notmatch '^skills/' -and $_ -notmatch '^agents/'
+        })
     }
     finally {
         Pop-Location
