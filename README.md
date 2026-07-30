@@ -1,6 +1,6 @@
 # shane-cursor-skills
 
-Splunk-focused Cursor skills and agents for threat hunting, TA development, dashboard building, and log generation. Works with [Cursor](https://cursor.com) and other AI coding agents that support the [Agent Skills](https://agentskills.io/) specification.
+Splunk-focused Cursor skills and agents for threat hunting, TA development, dashboard building, AI Toolkit/ML-SPL workflows, and log generation. Works with [Cursor](https://cursor.com) and other AI coding agents that support the [Agent Skills](https://agentskills.io/) specification.
 
 This repository extends [dtherrick/splunk-skills](https://github.com/dtherrick/splunk-skills) with the same `skills/` + `agents/` layout. It adds **splunk-log-generator** and **comprehensive-plan-mode**, and uses the [Vercel skills CLI](https://github.com/vercel-labs/skills) for installation instead of a custom npm package.
 
@@ -65,6 +65,7 @@ Skills are instruction sets that guide your AI coding agent through specialized 
 | **peak-threat-hunting** | Conduct threat hunts in Splunk using the PEAK framework (Prepare, Execute, Act with Knowledge). Supports hypothesis-driven, baseline, and model-assisted hunts with MITRE ATT&CK mapping. |
 | **splunk-ta-development** | Build Splunk Technology Add-ons (TAs) end-to-end — analyze log samples, create props.conf/transforms.conf, load data, and validate field extractions via the Splunk MCP server. |
 | **splunk-dashboard-studio** | Build Dashboard Studio dashboards using JSON definitions. Covers visualization types, layout design, tokens, interactivity, Dynamic Options Syntax (DOS), and conditional formatting. |
+| **splunk-aitk-mcp** | Operate Splunk AI Toolkit 6.0 through a Splunk MCP server. Covers GenAI (`ai`, `aiagent`), ML-SPL model workflows (`fit`, `apply`, `score`, `summary`, `listmodels`, `deletemodel`, `sample`), environment probing, cost controls, MCP limits, safeguard fallback, and held-out validation. |
 | **splunk-log-generator** | Build Python scripts that generate realistic logs for any Splunk sourcetype and send them to Splunk via HEC. Supports catalog mode and scenario mode with correlated IOCs. |
 | **comprehensive-plan-mode** | Enhances Cursor Plan Mode with a three-phase workflow — clarification, research, and detailed plan generation. Attach at the end of Plan Mode prompts; not auto-invoked (`disable-model-invocation: true`). |
 
@@ -102,6 +103,8 @@ Override the commit message:
 Most Splunk skills and agents require a [Splunk MCP server](https://github.com/livehybrid/splunk-mcp) connection to run queries and deploy dashboards against a Splunk instance.
 
 **splunk-log-generator** requires Python and a Splunk HTTP Event Collector (HEC) endpoint.
+
+**splunk-aitk-mcp** requires Splunk AI Toolkit 6.0.0 on Splunk Cloud, the compatible Python for Scientific Computing add-on (PSC 4.3.2 or 4.3.3), a Splunk MCP server, and the capabilities/search-command permissions needed for the requested ML-SPL operation. Its `ai` and `aiagent` workflows can send Splunk data to configured LLM providers and incur per-event costs, so review sensitive fields and bound the first run before scaling.
 
 **comprehensive-plan-mode** is attach-only — add `@comprehensive-plan-mode` to Plan Mode prompts when you want maximum plan depth before implementation.
 

@@ -30,6 +30,7 @@ $SkillAllowlist = @(
     'peak-threat-hunting',
     'splunk-ta-development',
     'splunk-dashboard-studio',
+    'splunk-aitk-mcp',
     'splunk-log-generator',
     'comprehensive-plan-mode'
 )
