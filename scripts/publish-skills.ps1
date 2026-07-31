@@ -32,6 +32,7 @@ $SkillAllowlist = @(
     'splunk-dashboard-studio',
     'splunk-aitk-mcp',
     'splunk-log-generator',
+    'splunk-diag-doctor',
     'comprehensive-plan-mode'
 )
 
@@ -58,6 +59,22 @@ function Test-GitRepository([string]$Path) {
     finally {
         Pop-Location
     }
+}
+
+function Get-SkillSourcePath {
+    param([string]$SkillName)
+
+    $direct = Join-Path $LocalSkillsRoot $SkillName
+    $nested = Join-Path $direct $SkillName
+
+    if (Test-Path (Join-Path $direct 'SKILL.md')) {
+        return $direct
+    }
+    if (Test-Path (Join-Path $nested 'SKILL.md')) {
+        return $nested
+    }
+
+    throw "Allowlisted skill not found locally: $direct (also checked $nested)"
 }
 
 function Get-UnrelatedDirtyPaths([string]$Path) {
@@ -128,10 +145,7 @@ if (-not (Test-GitRepository $RepoRoot)) {
 }
 
 foreach ($skill in $SkillAllowlist) {
-    $source = Join-Path $LocalSkillsRoot $skill
-    if (-not (Test-Path $source)) {
-        throw "Allowlisted skill not found locally: $source"
-    }
+    Get-SkillSourcePath -SkillName $skill | Out-Null
 }
 
 $unrelatedDirty = Get-UnrelatedDirtyPaths $RepoRoot
@@ -149,7 +163,7 @@ if (-not $DryRun) {
 }
 
 foreach ($skill in $SkillAllowlist) {
-    $source = Join-Path $LocalSkillsRoot $skill
+    $source = Get-SkillSourcePath -SkillName $skill
     $destination = Join-Path $RepoSkillsRoot $skill
     Sync-DirectoryMirror -Source $source -Destination $destination -Label "skill:$skill"
 }
